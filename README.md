@@ -113,3 +113,9 @@ node tests/collision.cjs
 ```
 
 The regression checks cover collisions, lives and power-ups, level transitions, ice movement, animated spike hitboxes, obstacle jumps, and return routes. They use a simulated DOM and canvas, so also open the game in a browser to review its appearance and play feel.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+Copyright (c) 2026 Julian Ronge.
