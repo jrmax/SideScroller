@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wolkenhüpfer – das bunte Abenteuer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <header><a class="brand" href="./">☀ <span>Wolkenhüpfer<small>DEIN KLEINES GROSSES ABENTEUER</small></span></a><button id="sound" aria-label="Ton einschalten">♫ Ton aus</button></header>
+  <section class="heading"><div><span class="eyebrow">AUF DIE PLÄTZE. FERTIG. HÜPF!</span><h1>Ein Sprung ins Abenteuer<span>.</span></h1><p>Sammle Sterne, hüpfe über Hindernisse und entdecke zehn bunte Welten.</p></div><div class="badge">10 Welten<br><strong>∞ Spaß</strong></div></section>
+  <section class="game-shell">
+    <div class="toolbar"><div class="level"><span id="level-number">01</span><div><small id="world-label">WELT 1 VON 10</small><strong id="level-name">Sonnenwiese</strong></div></div><div class="stats"><span id="lives" aria-label="5 Leben">♥ ♥ ♥ ♥ ♥</span><span class="star">★ <b id="score">0</b></span><button id="pause" title="Pause (P)">Ⅱ</button><button id="fullscreen" title="Vollbild (F)" aria-label="Vollbild einschalten" aria-pressed="false">⛶</button></div></div>
+    <div class="stage"><canvas id="game" width="1100" height="520" tabindex="0" aria-label="Jump-and-Run Spiel. Pfeiltasten zum Laufen, Leertaste zum Springen."></canvas><div id="overlay" class="overlay"><div class="overlay-card"><span class="hero-icon">✦</span><span class="eyebrow" id="overlay-label">HALLO, ABENTEURER!</span><h2 id="overlay-title">Die Welt wartet auf dich.</h2><p id="overlay-text">Zehn Welten voller Sterne und kleiner Überraschungen. Bist du bereit?</p><button class="primary" id="start">Los geht’s <span>➜</span></button><small id="overlay-hint">Mit Enter starten · Mit ♥ und fünf Leben im Gepäck</small></div></div><div id="toast"></div></div>
+    <div class="game-bottom"><label class="auto"><input type="checkbox" id="autorun"><span class="switch"></span><span>Automatisch laufen<small>Du kümmerst dich nur ums Springen.</small></span></label><span class="keyboard"><kbd>←</kbd><kbd>→</kbd> Laufen <i></i><kbd>Leertaste</kbd> Springen <i></i><kbd>P</kbd> Pause</span></div>
+  <div class="touch-controls"><button id="left" aria-label="Links laufen">←</button><button id="right" aria-label="Rechts laufen">→</button><button id="jump">Springen ↑</button></div>
+  </section>
+  <aside class="power-guide" aria-label="Power-ups"><strong>Deine kleinen Superkräfte</strong><span><b class="shield-icon">◆</b> Schild · schützt vor einem Treffer</span><span><b class="jump-icon">↑</b> Sprungboost · 15 Sekunden höher springen</span><span><b class="life-icon">♥</b> Extra-Leben · sammle mehr als 5 Leben</span></aside>
+  <section class="journey"><div class="journey-heading"><h2>Deine Reise</h2><span>Zehn Welten. Ein großes Abenteuer.</span></div><div id="worlds" class="worlds"></div></section>
+  <footer><span>Ein kleiner Held. Ganz große Sprünge.</span><span>Einfach spielen · Keine Downloads · Viel Freude</span></footer>
+</main><script src="game.js"></script>
+</body></html>
