@@ -160,7 +160,20 @@ window.addEventListener('keydown',handleKeyDown);
 window.addEventListener('keyup',e=>keys.delete(e.code));
 window.addEventListener('blur',()=>{keys.clear();if(mode==='playing'||mode==='dying')pause();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&(mode==='playing'||mode==='dying'))pause();});
-for(const [id,key] of [['left','ArrowLeft'],['right','ArrowRight'],['jump','Space']]){const b=$('#'+id);b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);keys.add(key);if(key==='Space')queueJump();});for(const event of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(event,()=>keys.delete(key));}
+for(const [id,key] of [['left','ArrowLeft'],['right','ArrowRight'],['jump','Space']]){
+ const b=$('#'+id),pointers=new Set();
+ // Suppress native long-press selection, callouts and repeated-tap gestures only here.
+ for(const event of ['contextmenu','selectstart','dragstart','touchstart']){
+  b.addEventListener(event,e=>e.preventDefault(),{passive:false});
+ }
+ b.addEventListener('pointerdown',e=>{
+  e.preventDefault();b.setPointerCapture(e.pointerId);pointers.add(e.pointerId);
+  keys.add(key);if(key==='Space')queueJump();
+ });
+ for(const event of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(event,e=>{
+  pointers.delete(e.pointerId);if(!pointers.size)keys.delete(key);
+ });
+}
 function overlaps(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;}
 function obstacleParts(o){
  if(o.layers>1)return Array.from({length:o.layers},(_,i)=>obstacleParts({...o,layers:1,y:o.y+i*o.h/o.layers,h:o.h/o.layers})).flat();

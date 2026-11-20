@@ -8,7 +8,9 @@ const document = {activeElement: {tagName: 'BODY'}, addEventListener() {}};
 document.querySelector = selector => {
   if (!elements.has(selector)) elements.set(selector, {
     checked: false, classList: {add() {}, remove() {}},
-    setAttribute() {}, addEventListener() {}, getContext() {return new Proxy({}, {get(target,key){return target[key]??(()=>{});},set(target,key,value){target[key]=value;return true;}});},
+    listeners: {}, setAttribute() {}, setPointerCapture() {},
+    addEventListener(type,handler,options) {this.listeners[type]={handler,options};},
+    getContext() {return new Proxy({}, {get(target,key){return target[key]??(()=>{});},set(target,key,value){target[key]=value;return true;}});},
     focus() {document.activeElement = this;}, tagName: selector === '#game' ? 'CANVAS' : 'BUTTON'
   });
   return elements.get(selector);
@@ -232,4 +234,26 @@ const mushroomParts=obstacleParts(mushroom);
 assert.equal(mushroomParts.length,2,'mushroom cap and stem have separate solid parts');
 assert.ok(!mushroomParts.some(p=>overlaps({x:mushroom.x,y:mushroom.y+mushroom.h-5,w:3,h:4},p)),'empty space beside mushroom stem is not solid');
 console.log('Collision regression checks passed.');
+reset();
+for(const [id,key] of [['left','ArrowLeft'],['right','ArrowRight'],['jump','Space']]){
+ const b=document.querySelector('#'+id);
+ for(const type of ['contextmenu','selectstart','dragstart','touchstart']){
+  let prevented=false;b.listeners[type].handler({preventDefault(){prevented=true;}});
+  assert.ok(prevented,'native gesture prevented: '+type);assert.equal(b.listeners[type].options.passive,false);
+ }
+ b.listeners.pointerdown.handler({pointerId:1,preventDefault(){}});
+ assert.ok(keys.has(key));if(key==='Space')assert.ok(jumpBuffer>0);
+ b.listeners.pointerdown.handler({pointerId:2,preventDefault(){}});
+ b.listeners.pointerup.handler({pointerId:1});assert.ok(keys.has(key),'second finger keeps button held');
+ b.listeners.lostpointercapture.handler({pointerId:1});assert.ok(keys.has(key));
+ b.listeners.pointercancel.handler({pointerId:2});assert.ok(!keys.has(key),'cancel releases button');
+}
+const right=document.querySelector('#right'),jump=document.querySelector('#jump');
+right.listeners.pointerdown.handler({pointerId:3,preventDefault(){}});
+for(let i=0;i<20;i++){
+ jumpBuffer=0;jump.listeners.pointerdown.handler({pointerId:4,preventDefault(){}});
+ assert.ok(jumpBuffer>0);jump.listeners.pointerup.handler({pointerId:4});assert.ok(keys.has('ArrowRight'));
+}
+right.listeners.pointerup.handler({pointerId:3});assert.ok(!keys.has('ArrowRight'));
+console.log('Touch gesture suppression, multi-touch, cancellation and repeated jumps passed.');
 `, sandbox);
